@@ -1,4 +1,4 @@
-package fr.romgrm.microcommerce.dao;
+/*package fr.romgrm.microcommerce.dao;
 
 import fr.romgrm.microcommerce.model.Product;
 import org.springframework.stereotype.Repository;
@@ -14,12 +14,12 @@ import java.util.List;
 
 public class ProductDaoImplement implements ProductDao{
 
-    public static List<Product> productsList = new ArrayList<>(); /* on créer une ArrayList de la classe Product (pour
-    récupérer les infos des pdts) et on remplie cette liste avec des nouveau produits (et les infos, grâce au constructor)*/
+    public static List<Product> productsList = new ArrayList<>(); // on créer une ArrayList de la classe Product (pour
+    récupérer les infos des pdts) et on remplie cette liste avec des nouveau produits (et les infos, grâce au constructor)//
     {
-        productsList.add(new Product(1, "Aspirateur", 120, 80)); // ajout d'un nouveau pdt à la list
+        productsList.add(new Product(1, "Aspirateur", 120, 60)); // ajout d'un nouveau pdt à la list
         productsList.add(new Product(2, "Assiettes", 4, 2));
-        productsList.add(new Product(3, "Grille-pain", 35, 20));
+        productsList.add(new Product(3, "Grille-pain", 35, 17));
         productsList.add(new Product(4, "Four", 300, 150));
     }
 
@@ -48,4 +48,4 @@ public class ProductDaoImplement implements ProductDao{
         productsList.add(productASave);
         return productASave;
     }
-}
+}*/

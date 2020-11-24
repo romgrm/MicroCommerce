@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 // dit au compilateur json Jackson d'ignorer ces propriétés et donc de ne pas les afficher. Si l'on souhaite aller plus
@@ -13,17 +14,19 @@ import javax.persistence.Id;
 //@JsonIgnoreProperties(value = {"prixAchat", "id"})
 
 @Entity // permet de dire que notre Bean Product est une entity pour que ça soit ses données qui soit sauvegardées dans
-// la BDD
+// la BDD. On retrouve donc Product directement dans H2 avec les requêtes du fichier data.sql
 public class Product {
 
     // Id et GeneratedValue permet d'identifier la bean comme une clé unique/primaire auto-générée
+    // le (strategy = GenerationType.IDENTITY) est essentiel avec un JPA car sinon on ne peut pas ajouter un item avec POST
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
     private int prix;
 
     // info que l'on veut cacher en requete
+
     private int prixAchat;
 
     // DEFAULT CONSTRUCTOR
@@ -65,9 +68,13 @@ public class Product {
         this.prix = prix;
     }
 
-    public int getPrixAchat() {return prixAchat;}
+    public int getPrixAchat() {
+        return prixAchat;
+    }
 
-    public void setPrixAchat(int prixAchat){this.prixAchat = prixAchat;}
+    public void setPrixAchat(int prixAchat) {
+        this.prixAchat = prixAchat;
+    }
 
     @Override
     public String toString() {
@@ -75,7 +82,6 @@ public class Product {
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prix=" + prix +
-                ", prixAchat=" + prixAchat +
                 '}';
     }
 }

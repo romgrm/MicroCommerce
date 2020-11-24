@@ -6,12 +6,16 @@ import fr.romgrm.microcommerce.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -30,12 +34,52 @@ public class ProductController {
         return productDao.findAll();
     }
 
+
+
     @GetMapping(value="/Products/{id}")
     public Product afficherUnProduitId(@PathVariable int id){
         return productDao.findById(id);
     }
 
+    // cette methode permet de retourner tous les produits a un prix superieur a {prixLimit}
+    @GetMapping(value="test/produits/{prixLimit}")
+    public  List<Product> testRequete(@PathVariable int prixLimit){
+        return productDao.findByPrixGreaterThan(100);
+    }
 
+    // ici on recherche un pdt par son nom avec la method findByNomLike. le {recherche} correspondra a l'entrée URI de l'utilisateur
+    // l'entrée URI doit correspondre parfaitement a nos requetes sql (ex: Aspitareur et non aspirateur) pour afficher le résultat
+    @GetMapping(value = "/recherche/{recherche}")
+    public List<Product> stringTest(@PathVariable String recherche) {
+        return productDao.findByNomLike(recherche);
+    }
+
+    // .save() method connu par JPA donc pas besoin de l'implémenter dans JPArepository, juste la déclarer dans le controller
+    @PostMapping(value="/Products")
+    public ResponseEntity<Void> createProduct (@RequestBody Product product) {
+        Product savedProduct = productDao.save(product);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedProduct.getId()).toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    // .deleteById() method connu par JPA donc pas besoin de l'implémenter dans JPArepository, juste la déclarer dans le controller
+    @DeleteMapping (value = "/Products/{id}")
+    public void deleteProduct(@PathVariable int id){
+        productDao.deleteById(id);
+    }
+
+    // Ici .save() est utilisé en PUT donc l'id renseigné devra obligatoirement être le même que l'id du produit déja existant
+    // que l'on souhaite update
+
+    @PutMapping(value="/Products")
+    public void updateProduct(@RequestBody Product product) {
+        productDao.save(product);
+    }
+    
+    
+    /*
     //Cette requête POST nous permet d'ajouter un produit. le @ResquestBody permet de convertir la requête POST de format
     // JSON en objet pour springboot. product sera donc sauvegarder via la fonction implémentée 'save' de productDao, en
     // tant qu'objet de la classe Product (donc avec un id, un nom et un prix)
@@ -43,6 +87,8 @@ public class ProductController {
     // Le protocole HTTP veut que lorsqu'une requete POST est executée, on nous renvoie un code 201 created. Or la on a
     // un code 200. C'est pour ça qu'on va utiliser le ResponseEntity pour changer le code http a return
     // ResponseEntity permet de définir le code http à return et donc nous permettre de le modifier
+
+    // La method .save est autogeneree par la dépendance data/JPA ce qui fait qu'on a pas à la spécifier dans le JPArepository
     @PostMapping(value="/Products")
     public ResponseEntity<Void> ajouterProduit  (@RequestBody Product product ) {
 
@@ -51,8 +97,8 @@ public class ProductController {
         Product productAdded =  productDao.save(product);
 
         // si notre product est vide/null, on renvoie le code 204 no Content grâce à la fonction 'noContent'
-        if (productAdded == null)
-            return ResponseEntity.noContent().build();
+       // if (productAdded == null)
+         //   return ResponseEntity.noContent().build();
 
         // Si le product n'est pas vide, alors on renvoie le code 201 + on ajoute cette nouvelle ressource
         // à l'URI, en lui ajoutant également un {id}
@@ -69,7 +115,9 @@ public class ProductController {
         // L'intérêt d'avoir ajouté notre product à l'URI c'est de pouvoir le retrouver dans l'url via
         // une methode get et de lui attribuer un id et donc de l'afficher dans le nav web
 
-    }
+    } */
+
+
     
 
     
