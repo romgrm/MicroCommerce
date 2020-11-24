@@ -17,10 +17,10 @@ public class ProductDaoImplement implements ProductDao{
     public static List<Product> productsList = new ArrayList<>(); /* on créer une ArrayList de la classe Product (pour
     récupérer les infos des pdts) et on remplie cette liste avec des nouveau produits (et les infos, grâce au constructor)*/
     {
-        productsList.add(new Product(1, "Aspirateur", 120)); // ajout d'un nouveau pdt à la list
-        productsList.add(new Product(2, "Assiettes", 4));
-        productsList.add(new Product(3, "Grille-pain", 35));
-        productsList.add(new Product(4, "Four", 300));
+        productsList.add(new Product(1, "Aspirateur", 120, 80)); // ajout d'un nouveau pdt à la list
+        productsList.add(new Product(2, "Assiettes", 4, 2));
+        productsList.add(new Product(3, "Grille-pain", 35, 20));
+        productsList.add(new Product(4, "Four", 300, 150));
     }
 
 
