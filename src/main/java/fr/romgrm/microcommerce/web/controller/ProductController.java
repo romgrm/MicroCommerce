@@ -3,6 +3,7 @@ package fr.romgrm.microcommerce.web.controller;
 
 import fr.romgrm.microcommerce.dao.ProductDao;
 import fr.romgrm.microcommerce.model.Product;
+import fr.romgrm.microcommerce.web.exceptions.ProductIntrouvableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
 
 
 @RestController // l'annotation @RestController permet de dire que cette classe va envoyer des requêtes et qu'il faudra
@@ -38,7 +40,14 @@ public class ProductController {
 
     @GetMapping(value="/Products/{id}")
     public Product afficherUnProduitId(@PathVariable int id){
-        return productDao.findById(id);
+        Product product = productDao.findById(id);
+
+        // si l'id rentré ne correspond a aucun prdt, on envoie une error personnalisé grâce à la class 'productIntrouvableException' créée
+        if(product==null) {
+            throw new ProductIntrouvableException("Le produit avec l'id " + id + " n'existe pas !");
+        }
+
+        return product;
     }
 
     // cette methode permet de retourner tous les produits a un prix superieur a {prixLimit}
@@ -55,8 +64,10 @@ public class ProductController {
     }
 
     // .save() method connu par JPA donc pas besoin de l'implémenter dans JPArepository, juste la déclarer dans le controller
+    // l'annotation @Valid sert à indiquer au Controller que le produit reçu (donc la requête Sql contenant le nom, prix de l'article) est à valider
+    // dû aux constraints @Length et @Min d'hibernate
     @PostMapping(value="/Products")
-    public ResponseEntity<Void> createProduct (@RequestBody Product product) {
+    public ResponseEntity<Void> createProduct (@Valid @RequestBody Product product) {
         Product savedProduct = productDao.save(product);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedProduct.getId()).toUri();

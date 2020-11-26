@@ -2,11 +2,14 @@ package fr.romgrm.microcommerce.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+
 
 // dit au compilateur json Jackson d'ignorer ces propriétés et donc de ne pas les afficher. Si l'on souhaite aller plus
 // loin on peut utiliser la propriété JsonFilter pour trier dynamiquement (cf cours OpenClassroom)
@@ -22,7 +25,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Length(min=3, max=20, message = "trop de caractère") // on définit une longueur min/max de caractere en nom d'un produit grace aux constraints d'Hibernate
     private String nom;
+
+    @Min(value=1) // on définit une valeur min en priux d'un produit grace aux constraints d'Hibernate (ajouter la dépendance)
     private int prix;
 
     // info que l'on veut cacher en requete

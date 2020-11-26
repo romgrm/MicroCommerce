@@ -28,6 +28,8 @@ public interface ProductDao extends JpaRepository <Product, Integer> {
 
 
 
+
+
     /*public List<Product> findAll(); // une fonction qui va renvoyer une liste complète des produits (objets)
     public Product findById(int id); // une fonction qui permet de trouver un produit (de la classe Product) en fonction de son id
     public Product save(Product productASave); // fonction qui permet d'ajouter un produit à la classe product
